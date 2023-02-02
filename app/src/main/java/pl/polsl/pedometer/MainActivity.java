@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     SummaryFragment summaryFragment = new SummaryFragment();
     AchievementsFragment achievementsFragment = new AchievementsFragment();
     SettingsFragment settingsFragment = new SettingsFragment();
+    //asd
 
     @SuppressLint("ResourceType")
     @Override
