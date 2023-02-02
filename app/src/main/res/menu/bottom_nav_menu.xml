@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/home"
+        android:id="@+id/homeButton"
         android:title="Home"
-        android:icon="@drawable/ic_launcher_background"/>
+        android:icon="@drawable/ic_launcher_foreground"/>
     <item
-        android:id="@+id/summary"
+        android:id="@+id/summaryButton"
         android:title="Summary"
         android:icon="@drawable/ic_launcher_background"/>
     <item
-        android:id="@+id/achievements"
+        android:id="@+id/achievementsButton"
         android:title="Achievements"
         android:icon="@drawable/ic_launcher_background"/>
     <item
-        android:id="@+id/settings"
+        android:id="@+id/settingsButton"
         android:title="Settings"
         android:icon="@drawable/ic_launcher_background"/>
 </menu>
