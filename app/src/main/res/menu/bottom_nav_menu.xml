@@ -3,17 +3,17 @@
     <item
         android:id="@+id/homeButton"
         android:title="Home"
-        android:icon="@drawable/ic_launcher_foreground"/>
+        android:icon="@drawable/baseline_home_24"/>
     <item
         android:id="@+id/summaryButton"
         android:title="Summary"
-        android:icon="@drawable/ic_launcher_background"/>
+        android:icon="@drawable/baseline_event_note_24"/>
     <item
         android:id="@+id/achievementsButton"
         android:title="Achievements"
-        android:icon="@drawable/ic_launcher_background"/>
+        android:icon="@drawable/baseline_gpp_good_24"/>
     <item
         android:id="@+id/settingsButton"
         android:title="Settings"
-        android:icon="@drawable/ic_launcher_background"/>
+        android:icon="@drawable/baseline_settings_24"/>
 </menu>
