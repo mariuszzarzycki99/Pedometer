@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +60,24 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        ImageButton button = (ImageButton) view.findViewById(R.id.button2);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                button.setSelected(!button.isSelected());
+                if (button.isSelected()) {
+                    //Handle selected state change
+                    Toast.makeText(getView().getContext(),"Nalicza", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    //Handle de-select state change
+                    Toast.makeText(getView().getContext(),"Nie nalicza", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        return view;
     }
 }
