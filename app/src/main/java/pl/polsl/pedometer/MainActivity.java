@@ -1,13 +1,6 @@
 package pl.polsl.pedometer;
 
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
+import android.Manifest.permission;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -16,8 +9,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.Manifest.permission;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -27,7 +24,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     private static final int ACTIVITY_CODE = 77;
     private static int steps = 0;
+    @SuppressWarnings("FieldCanBeLocal")
     private SensorManager sensorManager;
+    @SuppressWarnings("FieldCanBeLocal")
     private Sensor sensor;
 
 
@@ -37,11 +36,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     AchievementsFragment achievementsFragment = new AchievementsFragment();
     SettingsFragment settingsFragment = new SettingsFragment();
 
-    @SuppressLint("ResourceType")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -50,10 +50,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         if (ContextCompat.checkSelfPermission(this, permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,new String[] {permission.ACTIVITY_RECOGNITION},ACTIVITY_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{permission.ACTIVITY_RECOGNITION}, ACTIVITY_CODE);
             Toast.makeText(getApplicationContext(), "E KURWA", Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             Toast.makeText(getApplicationContext(), "GIT", Toast.LENGTH_LONG).show();
         }
 
@@ -66,32 +65,33 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.homeButton:
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,homeFragment).commit();
-                return true;
-            case R.id.summaryButton:
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,summaryFragment).commit();
-                return true;
-            case R.id.achievementsButton:
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,achievementsFragment).commit();
-                return true;
-            case R.id.settingsButton:
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment,settingsFragment).commit();
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.homeButton) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, homeFragment).commit();
+            return true;
+        }
+        if (itemId == R.id.summaryButton) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, summaryFragment).commit();
+            return true;
+        }
+        if (itemId == R.id.achievementsButton) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, achievementsFragment).commit();
+            return true;
+        }
+        if (itemId == R.id.settingsButton) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, settingsFragment).commit();
+            return true;
         }
         return false;
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == ACTIVITY_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(MainActivity.this, "Activity Permission Granted", Toast.LENGTH_LONG).show();
-            }
-            else {
+            } else {
                 Toast.makeText(MainActivity.this, "Activity Permission Denied", Toast.LENGTH_LONG).show();
             }
         }
