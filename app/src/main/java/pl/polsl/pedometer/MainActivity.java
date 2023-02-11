@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             stepService = binder.getStepService();
             mStepServiceBound = true;
         }
+
         public void onServiceDisconnected(ComponentName className) {
             mStepServiceBound = false;
         }
@@ -60,11 +61,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             //TODO: Reakcja na brak uprawnien?
             Toast.makeText(getApplicationContext(), "TODO: E KURWA", Toast.LENGTH_LONG).show();
         } else {
-            if(!SingletonServiceManager.isStepDetectorServiceRunning) {
+            if (!SingletonServiceManager.isStepDetectorServiceRunning) {
                 startStepdetectorService();
             }
-                Intent intent = new Intent(this, StepDetectorService.class);
-                bindService(intent, stepSensorConnection, 0);
+            Intent intent = new Intent(this, StepDetectorService.class);
+            bindService(intent, stepSensorConnection, 0);
         }
     }
 
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             }
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -109,24 +111,24 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     @Override
     public void onStop() {
         super.onStop();
-        if(mStepServiceBound) {
+        if (mStepServiceBound) {
             unbindService(stepSensorConnection);
         }
         mStepServiceBound = false;
     }
+
     @Override
     public void onPause() {
         super.onPause();
     }
 
-    public void startStepdetectorService()
-    {
+    public void startStepdetectorService() {
         Intent intent = new Intent(this, StepDetectorService.class);
         startService(intent);
     }
 
     public Integer getSteps() {
-        if(mStepServiceBound) {
+        if (mStepServiceBound) {
             return stepService.getCurrentSteps();
         }
         return 0;
