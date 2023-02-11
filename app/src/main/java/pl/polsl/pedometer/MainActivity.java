@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     SummaryFragment summaryFragment = new SummaryFragment();
     AchievementsFragment achievementsFragment = new AchievementsFragment();
     SettingsFragment settingsFragment = new SettingsFragment();
-    //asd
 
 
     @Override
@@ -124,6 +123,13 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     {
         Intent intent = new Intent(this, StepDetectorService.class);
         startService(intent);
+    }
+
+    public Integer getSteps() {
+        if(mStepServiceBound) {
+            return stepService.getCurrentSteps();
+        }
+        return 0;
     }
 
 }

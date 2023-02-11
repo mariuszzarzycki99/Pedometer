@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 
 public class StepDetectorService extends Service implements SensorEventListener {
 
-    private static long currentSteps;
+    private static Integer currentSteps;
     @SuppressWarnings("FieldCanBeLocal")
     private SensorManager sensorManager;
     @SuppressWarnings("FieldCanBeLocal")
@@ -98,7 +98,7 @@ public class StepDetectorService extends Service implements SensorEventListener 
         return channelId;
     }
 
-    public long getCurrentSteps() {
+    public Integer getCurrentSteps() {
         return currentSteps;
     }
 }
