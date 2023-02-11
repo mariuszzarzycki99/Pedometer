@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -38,14 +39,19 @@ public class SettingsFragment extends Fragment {
         Button button = (Button) view.findViewById(R.id.settingsButton);
 
         Spinner genderField = (Spinner) view.findViewById(R.id.gender);
+        setSpinnerValue(genderField);
+
         EditText heightField = (EditText) view.findViewById(R.id.height);
+        heightField.setText(Settings.getHeight().toString());
+
         EditText weightField = (EditText) view.findViewById(R.id.weight);
+        weightField.setText(Settings.getWeight().toString());
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Settings.setGender(genderField.getSelectedItem().toString());
-                Settings.setHeight(Integer.parseInt(heightField.getText().toString()));
+                Settings.setHeight(Double.parseDouble(heightField.getText().toString()));
                 Settings.setWeight(Double.parseDouble(weightField.getText().toString()));
 
                 Toast.makeText(getView().getContext(),"gender " + Settings.getGender(), Toast.LENGTH_SHORT).show();
@@ -57,5 +63,16 @@ public class SettingsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void setSpinnerValue(Spinner genderField) {
+        String compareValue = Settings.getGender();
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.genders, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genderField.setAdapter(adapter);
+        if (compareValue != null) {
+            int spinnerPosition = adapter.getPosition(compareValue);
+            genderField.setSelection(spinnerPosition);
+        }
     }
 }

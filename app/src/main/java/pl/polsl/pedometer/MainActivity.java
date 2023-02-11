@@ -18,6 +18,12 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
@@ -140,6 +146,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     public void loadSettings() {
         // TODO : implement
+    }
+
+    public static class Data {
+        private LocalDate date;
+        private Integer kroki;
     }
 
 }

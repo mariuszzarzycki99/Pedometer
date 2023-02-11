@@ -1,15 +1,15 @@
 package pl.polsl.pedometer;
 
 public class Settings {
-    private static String gender = "Male";
-    private static Integer height = 180;
+    private static String gender = "Female";
+    private static Double height = 180.0;
     private static Double weight = 70.0;
 
     public static String getGender() {
         return gender;
     }
 
-    public static Integer getHeight() {
+    public static Double getHeight() {
         return height;
     }
 
@@ -21,7 +21,7 @@ public class Settings {
         Settings.gender = gender;
     }
 
-    public static void setHeight(Integer height) {
+    public static void setHeight(Double height) {
         Settings.height = height;
     }
 
