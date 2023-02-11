@@ -51,6 +51,8 @@ public class SettingsFragment extends Fragment {
                 Toast.makeText(getView().getContext(),"gender " + Settings.getGender(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(getView().getContext(),"height " + Settings.getHeight(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(getView().getContext(),"weight " + Settings.getWeight(), Toast.LENGTH_SHORT).show();
+
+                ((MainActivity) getActivity()).saveSettings();
             }
         });
 

@@ -134,4 +134,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         return 0;
     }
 
+    public void saveSettings() {
+        // TODO : implement
+    }
+
+    public void loadSettings() {
+        // TODO : implement
+    }
+
 }
