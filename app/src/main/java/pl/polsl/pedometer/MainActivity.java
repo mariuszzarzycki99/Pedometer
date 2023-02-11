@@ -1,13 +1,12 @@
 package pl.polsl.pedometer;
 
 import android.Manifest.permission;
-import android.content.Context;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -20,15 +19,22 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener, SensorEventListener {
+public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     private static final int ACTIVITY_CODE = 77;
-    private static int steps = 0;
     @SuppressWarnings("FieldCanBeLocal")
-    private SensorManager sensorManager;
-    @SuppressWarnings("FieldCanBeLocal")
-    private Sensor sensor;
-
+    private StepDetectorService stepService;
+    boolean mStepServiceBound = false;
+    private final ServiceConnection stepSensorConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            StepDetectorService.PedoBinder binder = (StepDetectorService.PedoBinder) service;
+            stepService = binder.getStepService();
+            mStepServiceBound = true;
+        }
+        public void onServiceDisconnected(ComponentName className) {
+            mStepServiceBound = false;
+        }
+    };
 
     BottomNavigationView bottomNavigationView;
     HomeFragment homeFragment = new HomeFragment();
@@ -52,16 +58,15 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         if (ContextCompat.checkSelfPermission(this, permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{permission.ACTIVITY_RECOGNITION}, ACTIVITY_CODE);
-            Toast.makeText(getApplicationContext(), "E KURWA", Toast.LENGTH_LONG).show();
+            //TODO: Reakcja na brak uprawnien?
+            Toast.makeText(getApplicationContext(), "TODO: E KURWA", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), "GIT", Toast.LENGTH_LONG).show();
+            if(!SingletonServiceManager.isStepDetectorServiceRunning) {
+                startStepdetectorService();
+            }
+                Intent intent = new Intent(this, StepDetectorService.class);
+                bindService(intent, stepSensorConnection, 0);
         }
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-
-        sensorManager.registerListener(this, sensor,
-                SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -97,16 +102,28 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             }
         }
     }
-
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        steps++;
-        Toast.makeText(MainActivity.this, "Steps: " + steps, Toast.LENGTH_SHORT).show();
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-        Toast.makeText(MainActivity.this, "Zmienilo sie na: " + steps, Toast.LENGTH_SHORT).show();
+    public void onStop() {
+        super.onStop();
+        if(mStepServiceBound) {
+            unbindService(stepSensorConnection);
+        }
+        mStepServiceBound = false;
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    public void startStepdetectorService()
+    {
+        Intent intent = new Intent(this, StepDetectorService.class);
+        startService(intent);
     }
 
 }
