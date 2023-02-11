@@ -23,8 +23,7 @@ public class HomeFragment extends Fragment {
     }
 
     public static HomeFragment newInstance() {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
+        return new HomeFragment();
     }
 
     @Override
@@ -39,10 +38,23 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ImageButton button = (ImageButton) view.findViewById(R.id.button2);
 
+        TextView stepsTextView = (TextView) view.findViewById(R.id.steps);
+        TextView kmTextView = (TextView) view.findViewById(R.id.kilometers);
+        TextView timeTextView = (TextView) view.findViewById(R.id.time);
+        TextView kcalTextView = (TextView) view.findViewById(R.id.kcal);
 
-        Integer steps = ((MainActivity) getActivity()).getSteps();
-        TextView textView = (TextView) view.findViewById(R.id.steps);
-        textView.setText(steps.toString());
+        Integer steps = getSteps();
+
+        stepsTextView.setText(steps.toString());
+        Double km = steps / 1312.33595801;
+        kmTextView.setText(km.toString());
+
+//        Average walk: 1 km = 1,408 steps
+//        Brisk walk: 1 km = 1,209 steps
+//        Jog: 1 km = 1,219 steps
+//        Run: 1 km = 1,045 steps
+//        Fast run: 1 km = 875 steps
+//        Very fast run: 1 km = 675 steps
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,5 +72,9 @@ public class HomeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public Integer getSteps() {
+        return ((MainActivity) getActivity()).getSteps();
     }
 }
