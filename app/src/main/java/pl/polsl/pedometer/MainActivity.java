@@ -136,6 +136,14 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         }
         mStepServiceBound = false;
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (SingletonServiceManager.isStepDetectorServiceRunning) {
+            Intent intent = new Intent(this, StepDetectorService.class);
+            bindService(intent, stepSensorConnection, 0);
+        }
+    }
 
     @Override
     public void onPause() {
@@ -152,6 +160,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             return stepService.getCurrentSteps();
         }
         return lastSteps;
+    }
+    public Long getTime() {
+        if (mStepServiceBound && SingletonServiceManager.isStepDetectorServiceRunning) {
+            return stepService.getCurrentTime();
+        }
+        return lastTime;
     }
 
     public void startCounting() {
@@ -175,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         try {
             FileOutputStream writer = new FileOutputStream(new File(path, settingsFile));
             writer.write(Settings.getAll().getBytes());
-            Toast.makeText(MainActivity.this, "Saved to file", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
