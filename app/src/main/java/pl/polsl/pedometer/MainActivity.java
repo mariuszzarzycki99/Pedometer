@@ -72,11 +72,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        deleteRandomHistory();
-        createRandomHistory();
-        List<DateSteps> data = loadHistory();
-        for(DateSteps ds : data)
-            System.out.println(ds.getDate().toString() + " " + ds.getSteps());
+//        deleteRandomHistory();
+//        createRandomHistory();
+//        List<DateSteps> data = loadHistory();
+//        for(DateSteps ds : data)
+//            System.out.println(ds.getDate().toString() + " " + ds.getSteps());
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
