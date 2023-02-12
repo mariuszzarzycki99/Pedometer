@@ -22,6 +22,8 @@ import com.google.android.material.navigation.NavigationBarView;
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     private static final int ACTIVITY_CODE = 77;
+    private Integer lastSteps = 0;
+    private Long lastTime = 0l;
     @SuppressWarnings("FieldCanBeLocal")
     private StepDetectorService stepService;
     boolean mStepServiceBound = false;
@@ -30,7 +32,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             StepDetectorService.PedoBinder binder = (StepDetectorService.PedoBinder) service;
             stepService = binder.getStepService();
             mStepServiceBound = true;
+            lastSteps = stepService.getCurrentSteps();
+            lastTime = stepService.getCurrentTime();
         }
+
         public void onServiceDisconnected(ComponentName className) {
             mStepServiceBound = false;
         }
@@ -59,12 +64,15 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             ActivityCompat.requestPermissions(this, new String[]{permission.ACTIVITY_RECOGNITION}, ACTIVITY_CODE);
             //TODO: Reakcja na brak uprawnien?
             Toast.makeText(getApplicationContext(), "TODO: E KURWA", Toast.LENGTH_LONG).show();
-        } else {
-            if(!SingletonServiceManager.isStepDetectorServiceRunning) {
-                startStepdetectorService();
-            }
-                Intent intent = new Intent(this, StepDetectorService.class);
-                bindService(intent, stepSensorConnection, 0);
+        }
+
+        if(SingletonServiceManager.isStepDetectorServiceRunning)
+        {
+            Intent intent = new Intent(this, StepDetectorService.class);
+            bindService(intent, stepSensorConnection, 0);
+        }
+        else {
+            //TODO: Pobierz kroki i czas z pliku i usun plik
         }
     }
 
@@ -101,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             }
         }
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -109,27 +118,43 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     @Override
     public void onStop() {
         super.onStop();
-        if(mStepServiceBound) {
+        if (mStepServiceBound) {
             unbindService(stepSensorConnection);
         }
         mStepServiceBound = false;
     }
+
     @Override
     public void onPause() {
         super.onPause();
     }
 
-    public void startStepdetectorService()
-    {
+    public void startStepdetectorService() {
         Intent intent = new Intent(this, StepDetectorService.class);
         startService(intent);
     }
 
     public Integer getSteps() {
-        if(mStepServiceBound) {
+        if (mStepServiceBound && SingletonServiceManager.isStepDetectorServiceRunning) {
             return stepService.getCurrentSteps();
         }
-        return 0;
+        return lastSteps;
+    }
+
+    public void startCounting() {
+        if (!SingletonServiceManager.isStepDetectorServiceRunning) {
+            startStepdetectorService();
+        }
+        Intent intent = new Intent(this, StepDetectorService.class);
+        bindService(intent, stepSensorConnection, 0);
+    }
+
+    public void stopCounting() {
+        if (mStepServiceBound && SingletonServiceManager.isStepDetectorServiceRunning) {
+            lastSteps = stepService.getCurrentSteps();
+            lastTime = stepService.getCurrentTime();
+            stepService.stopStepService();
+        }
     }
 
 }

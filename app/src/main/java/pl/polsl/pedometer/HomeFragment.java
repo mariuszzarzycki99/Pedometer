@@ -43,6 +43,10 @@ public class HomeFragment extends Fragment {
         TextView timeTextView = (TextView) view.findViewById(R.id.time);
         TextView kcalTextView = (TextView) view.findViewById(R.id.kcal);
 
+        if(SingletonServiceManager.isStepDetectorServiceRunning)
+            button.setSelected(true);
+        else button.setSelected(false);
+
         Integer steps = getSteps();
 
         stepsTextView.setText(steps.toString());
@@ -61,11 +65,11 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 button.setSelected(!button.isSelected());
                 if (button.isSelected()) {
-                    //Handle selected state change
+                    ((MainActivity) getActivity()).startCounting();
                     Toast.makeText(getView().getContext(),"Nalicza", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    //Handle de-select state change
+                    ((MainActivity) getActivity()).stopCounting();
                     Toast.makeText(getView().getContext(),"Nie nalicza", Toast.LENGTH_SHORT).show();
                 }
             }

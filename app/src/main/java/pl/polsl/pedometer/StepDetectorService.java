@@ -18,15 +18,27 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class StepDetectorService extends Service implements SensorEventListener {
 
     private static Integer currentSteps;
+    private static Long currentTime;
     @SuppressWarnings("FieldCanBeLocal")
     private SensorManager sensorManager;
     @SuppressWarnings("FieldCanBeLocal")
     private Sensor sensor;
     private final IBinder binder = new PedoBinder();
+    final static String lastDataFilename = "lastRecordedData";
 
     public class PedoBinder extends Binder {
         StepDetectorService getStepService() {
@@ -39,8 +51,6 @@ public class StepDetectorService extends Service implements SensorEventListener 
 
     @Override
     public void onCreate() {
-        currentSteps = 0;
-
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
@@ -53,13 +63,43 @@ public class StepDetectorService extends Service implements SensorEventListener 
                 .setContentTitle("Pedometer")
                 .setContentText("Counting steps")
                 .setContentIntent(pendingIntent).build();
-
         startForeground(2137, notification);
-        SingletonServiceManager.isStepDetectorServiceRunning = true;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        SingletonServiceManager.isStepDetectorServiceRunning = true;
+        File file = getApplicationContext().getFileStreamPath(lastDataFilename);
+        if(file.exists()) {
+            try {
+                FileInputStream fis = getApplicationContext().openFileInput(lastDataFilename);
+                DataInputStream dis = new DataInputStream(fis);
+
+                int day = dis.readInt();
+                int month = dis.readInt();
+                int year = dis.readInt();
+
+                if((year != Calendar.getInstance().get(Calendar.YEAR)) ||
+                        ((Calendar.getInstance().get(Calendar.MONTH)+1)!= month) ||
+                        ((Calendar.getInstance().get(Calendar.DAY_OF_MONTH) != day)))
+                {
+                    //TODO: save time and steps
+                    currentSteps = 0;
+                    currentTime = 0l;
+                }
+                currentSteps = dis.readInt();
+                currentTime = dis.readLong();
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else {
+            currentSteps = 0;
+            currentTime = 0l;
+        }
         Toast.makeText(this, "Service starting", Toast.LENGTH_SHORT).show();
         // If we get killed, after returning from here, restart
         return START_STICKY;
@@ -67,6 +107,25 @@ public class StepDetectorService extends Service implements SensorEventListener 
 
     @Override
     public void onDestroy() {
+        try
+        {
+            FileOutputStream fos = getApplicationContext().openFileOutput(lastDataFilename, Context.MODE_PRIVATE);
+            DataOutputStream dos = new DataOutputStream(fos);
+
+            dos.writeInt(Calendar.getInstance().get(Calendar.YEAR));
+            dos.writeInt(Calendar.getInstance().get(Calendar.MONTH)+1);
+            dos.writeInt(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+
+            dos.writeInt(currentSteps);
+            dos.writeLong(currentTime);
+
+            dos.close();
+        }
+        catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Toast.makeText(this, "Service done", Toast.LENGTH_SHORT).show();
         SingletonServiceManager.isStepDetectorServiceRunning = false;
     }
@@ -97,8 +156,15 @@ public class StepDetectorService extends Service implements SensorEventListener 
         notificationManager.createNotificationChannel(channel);
         return channelId;
     }
-
+//ZW
     public Integer getCurrentSteps() {
         return currentSteps;
+    }
+    public Long getCurrentTime() {
+        return currentTime;
+    }
+    public void stopStepService()
+    {
+        stopSelf();
     }
 }
