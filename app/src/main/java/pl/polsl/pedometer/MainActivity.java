@@ -112,10 +112,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, summaryFragment).commit();
             return true;
         }
-        if (itemId == R.id.achievementsButton) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, achievementsFragment).commit();
-            return true;
-        }
+//        if (itemId == R.id.achievementsButton) {
+//            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, achievementsFragment).commit();
+//            return true;
+//        }
         if (itemId == R.id.settingsButton) {
             getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, settingsFragment).commit();
             return true;
