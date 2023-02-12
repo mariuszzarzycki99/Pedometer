@@ -37,6 +37,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
 
     final static String allDataFilename = "allData";
+    final static String lastDataFilename = "lastRecordedData";
     private static final int ACTIVITY_CODE = 77;
     private Integer lastSteps = 0;
     private Long lastTime = 0l;
@@ -96,7 +97,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             bindService(intent, stepSensorConnection, 0);
         }
         else {
-            //TODO: Pobierz kroki i czas z pliku i usun plik
+            lastActivityData last = getLastData();
+            lastSteps = last.steps;
+            lastTime = last.time;
         }
         initializeSettings();
     }
@@ -285,5 +288,57 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             return data;
         }
         return new ArrayList<DateSteps>();
+    }
+    private class lastActivityData
+    {
+        Integer steps;
+        Long time;
+    }
+
+    private lastActivityData getLastData()
+    {
+        lastActivityData lastData = new lastActivityData();
+        File file = getApplicationContext().getFileStreamPath(lastDataFilename);
+        if(file.exists()) {
+            try {
+                FileInputStream fis = getApplicationContext().openFileInput(lastDataFilename);
+                DataInputStream dis = new DataInputStream(fis);
+
+                int year = dis.readInt();
+                int month = dis.readInt();
+                int day = dis.readInt();
+                lastData.steps = dis.readInt();
+                lastData.time = dis.readLong();
+                dis.close();
+
+                if((year != Calendar.getInstance().get(Calendar.YEAR)) ||
+                        ((Calendar.getInstance().get(Calendar.MONTH)+1)!= month) ||
+                        ((Calendar.getInstance().get(Calendar.DAY_OF_MONTH) != day)))
+                {
+                    File path = getApplicationContext().getFilesDir();
+                    try {
+                        FileOutputStream writer = new FileOutputStream(new File(path, allDataFilename),true);
+                        DataOutputStream dos = new DataOutputStream(writer);
+                        dos.writeInt(year);
+                        dos.writeInt(month);
+                        dos.writeInt(day);
+                        dos.writeInt(lastData.steps);
+                        dos.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    lastData.steps = 0;
+                    lastData.time = 0L;
+                    file.delete();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else {
+            lastData.steps = 0;
+            lastData.time = 0L;
+        }
+        return lastData;
     }
 }
