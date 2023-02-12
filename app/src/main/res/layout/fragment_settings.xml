@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#28584A"
     tools:context=".SettingsFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -18,8 +19,12 @@
     <TextView
         android:id="@+id/textView6"
         android:layout_width="match_parent"
-        android:layout_height="39dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle"
         android:text="Gender"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/settingsFragment"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.093"
@@ -29,15 +34,21 @@
         android:id="@+id/gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/rectangle"
+        android:contextClickable="false"
         android:entries="@array/genders"
+        android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="match_parent"
-        android:layout_height="39dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle"
         android:text="Height"
+        android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/gender"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -45,17 +56,22 @@
         android:id="@+id/height"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:background="@drawable/rectangle"
         android:hint="Height"
         android:inputType="phone"
+        android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintTop_toBottomOf="@+id/textView8"
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="match_parent"
-        android:layout_height="39dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle"
         android:text="Weight"
+        android:textAlignment="center"
+        android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/height"
         tools:layout_editor_absoluteX="0dp" />
 
@@ -63,8 +79,11 @@
         android:id="@+id/weight"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/rectangle"
         android:hint="Weight"
         android:inputType="phone"
+        android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintTop_toBottomOf="@+id/textView9"
         tools:layout_editor_absoluteX="0dp" />
 

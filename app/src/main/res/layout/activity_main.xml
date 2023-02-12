@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="labeled"
-        android:background="#488D7E"
+        android:background="#B3E0C2"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
