@@ -1,7 +1,9 @@
 package pl.polsl.pedometer;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -23,48 +25,20 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class SummaryFragment extends Fragment {
-
     BarChart barChart;
-
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String historyFile = "pedometerHistory.txt";
 
     public SummaryFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SummaryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SummaryFragment newInstance(String param1, String param2) {
-        SummaryFragment fragment = new SummaryFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static SummaryFragment newInstance() {
+        return new SummaryFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -75,19 +49,32 @@ public class SummaryFragment extends Fragment {
 
         barChart = view.findViewById(R.id.barChart);
 
-        List<BarEntry> barEntries = new ArrayList<>();
-
-        for(int i = 0; i < 7; i++) {
-            barEntries.add(new BarEntry(i, i));
-        }
-
-        BarDataSet barDataSet = new BarDataSet(barEntries, "Steps");
-        barDataSet.setColors(ColorTemplate.LIBERTY_COLORS);
-        barDataSet.setDrawValues(false);
+        BarDataSet barDataSet = createGraphData();
         barChart.setData(new BarData(barDataSet));
         barChart.animateY(1000);
         barChart.getDescription().setText("Weekly steps");
 
         return view;
+    }
+
+    @NonNull
+    private BarDataSet createGraphData() {
+        List<BarEntry> barEntries = new ArrayList<>();
+        for(int i = 0; i < 7; i++) {
+            barEntries.add(new BarEntry(i, i));
+        }
+        BarDataSet barDataSet = new BarDataSet(barEntries, "Steps");
+        final int[] GRAPH_COLORS = {rgb("#000000")};
+        barDataSet.setColors(GRAPH_COLORS);
+        barDataSet.setDrawValues(false);
+        return barDataSet;
+    }
+
+    public static int rgb(String hex) {
+        int color = (int) Long.parseLong(hex.replace("#", ""), 16);
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+        return Color.rgb(r, g, b);
     }
 }

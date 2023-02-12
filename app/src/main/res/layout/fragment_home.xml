@@ -7,8 +7,6 @@
     android:background="#28584A"
     tools:context=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <View
         android:id="@+id/myRectangleView2"
         android:layout_width="358dp"
@@ -58,11 +56,11 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="112dp"
-        android:layout_height="38dp"
+        android:layout_height="59dp"
         android:layout_alignStart="@+id/myRectangleView2"
         android:layout_alignTop="@+id/myRectangleView2"
         android:fontFamily="sans-serif-black"
-        android:text="Kroki"
+        android:text="Steps"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="@+id/myRectangleView"
         app:layout_constraintEnd_toEndOf="@+id/myRectangleView"
@@ -79,6 +77,7 @@
         android:layout_alignTop="@+id/myRectangleView2"
         android:fontFamily="sans-serif-black"
         android:text="00000"
+        android:textAlignment="viewEnd"
         android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="@+id/myRectangleView"
         app:layout_constraintEnd_toEndOf="@+id/myRectangleView"
@@ -108,6 +107,7 @@
         android:layout_alignStart="@+id/textView2"
         android:fontFamily="sans-serif-black"
         android:text="00.0"
+        android:textAlignment="viewEnd"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/kcal"
         app:layout_constraintEnd_toEndOf="@+id/kcal"
@@ -134,6 +134,7 @@
         android:layout_alignStart="@+id/textView3"
         android:fontFamily="sans-serif-black"
         android:text="00:00"
+        android:textAlignment="viewEnd"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="@+id/myRectangleView2"
         app:layout_constraintEnd_toEndOf="@+id/kcal"
@@ -163,6 +164,7 @@
         android:layout_alignStart="@+id/textView4"
         android:fontFamily="sans-serif-black"
         android:text="0000"
+        android:textAlignment="viewEnd"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="@+id/myRectangleView2"
         app:layout_constraintEnd_toEndOf="@+id/myRectangleView2"

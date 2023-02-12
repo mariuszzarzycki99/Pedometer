@@ -53,11 +53,6 @@ public class SettingsFragment extends Fragment {
                 Settings.setGender(genderField.getSelectedItem().toString());
                 Settings.setHeight(Double.parseDouble(heightField.getText().toString()));
                 Settings.setWeight(Double.parseDouble(weightField.getText().toString()));
-
-                Toast.makeText(getView().getContext(),"gender " + Settings.getGender(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getView().getContext(),"height " + Settings.getHeight(), Toast.LENGTH_SHORT).show();
-                Toast.makeText(getView().getContext(),"weight " + Settings.getWeight(), Toast.LENGTH_SHORT).show();
-
                 ((MainActivity) getActivity()).saveSettings();
             }
         });
