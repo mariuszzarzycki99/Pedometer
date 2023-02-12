@@ -18,6 +18,11 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     @SuppressWarnings("FieldCanBeLocal")
     private StepDetectorService stepService;
     boolean mStepServiceBound = false;
+
+    private static final String settingsFile = "pedometerSettings.txt";
+
     private final ServiceConnection stepSensorConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             StepDetectorService.PedoBinder binder = (StepDetectorService.PedoBinder) service;
@@ -73,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             Intent intent = new Intent(this, StepDetectorService.class);
             bindService(intent, stepSensorConnection, 0);
         }
+
+        initializeSettings();
     }
 
     @Override
@@ -141,16 +151,36 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     }
 
     public void saveSettings() {
-        // TODO : implement
+        File path = getApplicationContext().getFilesDir();
+        try {
+            FileOutputStream writer = new FileOutputStream(new File(path, settingsFile));
+            writer.write(Settings.getAll().getBytes());
+            Toast.makeText(MainActivity.this, "Saved to file", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void loadSettings() {
-        // TODO : implement
+        File path = getApplicationContext().getFilesDir();
+        File fileToRead = new File(path, settingsFile);
+        byte[] fileContent = new byte[(int) fileToRead.length()];
+        try {
+            FileInputStream reader = new FileInputStream(fileToRead);
+            reader.read(fileContent);
+            Settings.setAll(new String(fileContent));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static class Data {
-        private LocalDate date;
-        private Integer kroki;
+    private void initializeSettings() {
+        File path = getApplicationContext().getFilesDir();
+        File file = new File(path, settingsFile);
+        if(file.exists()) {
+            loadSettings();
+        } else {
+            Settings.loadDefault();
+        }
     }
-
 }
