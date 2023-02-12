@@ -89,10 +89,12 @@ public class SummaryFragment extends Fragment {
             for(DateSteps day : lastSevenDays) {
                 if(date.equals(day.getDate())) {
                     barEntries.add(new BarEntry(date.getDayOfMonth(), day.getSteps()));
+                    break;
                 } else {
                     barEntries.add(new BarEntry(date.getDayOfMonth(), 0));
                 }
             }
+            barEntries.add(new BarEntry(LocalDate.now().getDayOfMonth(), getSteps()));
         }
         String infoText = "From " + LocalDate.now().minusDays(noOfDaysToShow - 1).toString()
                 + " to " + LocalDate.now().toString();
@@ -111,5 +113,9 @@ public class SummaryFragment extends Fragment {
         int g = (color >> 8) & 0xFF;
         int b = (color) & 0xFF;
         return Color.rgb(r, g, b);
+    }
+
+    public Integer getSteps() {
+        return ((MainActivity) getActivity()).getSteps();
     }
 }
