@@ -150,7 +150,6 @@ public class StepDetectorService extends Service implements SensorEventListener 
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-        Toast.makeText(this, "Accuracy changed", Toast.LENGTH_SHORT).show();
     }
 
     @NonNull

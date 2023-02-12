@@ -89,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         if (ContextCompat.checkSelfPermission(this, permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{permission.ACTIVITY_RECOGNITION}, ACTIVITY_CODE);
-            //TODO: Reakcja na brak uprawnien?
-            Toast.makeText(getApplicationContext(), "TODO: E KURWA", Toast.LENGTH_LONG).show();
         }
         if(SingletonServiceManager.isStepDetectorServiceRunning) {
             Intent intent = new Intent(this, StepDetectorService.class);
