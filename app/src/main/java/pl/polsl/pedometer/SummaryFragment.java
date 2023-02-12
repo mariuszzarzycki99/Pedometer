@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class SummaryFragment extends Fragment {
     BarChart barChart;
+    private static final String historyFile = "pedometerHistory.txt";
 
     public SummaryFragment() {
         // Required empty public constructor
