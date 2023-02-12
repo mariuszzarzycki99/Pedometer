@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 int month = dis.readInt();
                 int day = dis.readInt();
                 lastData.steps = dis.readInt();
-                lastData.time = dis.readLong();
+                lastData.time = dis.readLong()/1000;
                 dis.close();
 
                 if((year != Calendar.getInstance().get(Calendar.YEAR)) ||
