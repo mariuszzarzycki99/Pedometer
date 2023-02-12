@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#28584A"
+    android:textAlignment="textEnd"
     tools:context=".SettingsFragment">
 
     <TextView
@@ -23,7 +24,7 @@
     <Spinner
         android:id="@+id/gender"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@drawable/rectangle"
         android:contextClickable="false"
         android:entries="@array/genders"
@@ -45,7 +46,7 @@
     <EditText
         android:id="@+id/height"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@drawable/rectangle"
         android:hint="Height"
         android:inputType="phone"
@@ -68,7 +69,7 @@
     <EditText
         android:id="@+id/weight"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@drawable/rectangle"
         android:hint="Weight"
         android:inputType="phone"

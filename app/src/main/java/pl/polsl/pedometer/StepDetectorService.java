@@ -90,8 +90,6 @@ public class StepDetectorService extends Service implements SensorEventListener 
                 }
                 currentSteps = dis.readInt();
                 currentTime = dis.readLong();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -120,9 +118,6 @@ public class StepDetectorService extends Service implements SensorEventListener 
             dos.writeLong(currentTime);
 
             dos.close();
-        }
-        catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -138,7 +133,6 @@ public class StepDetectorService extends Service implements SensorEventListener 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         currentSteps++;
-        Toast.makeText(this, "Steps: " + currentSteps, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -156,7 +150,7 @@ public class StepDetectorService extends Service implements SensorEventListener 
         notificationManager.createNotificationChannel(channel);
         return channelId;
     }
-//ZW
+
     public Integer getCurrentSteps() {
         return currentSteps;
     }
