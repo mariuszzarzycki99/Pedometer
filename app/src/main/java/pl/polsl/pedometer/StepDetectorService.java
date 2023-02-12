@@ -22,17 +22,16 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class StepDetectorService extends Service implements SensorEventListener {
 
     private static Integer currentSteps;
     private static Long currentTime;
+    private static Long lastStartTime;
     @SuppressWarnings("FieldCanBeLocal")
     private SensorManager sensorManager;
     @SuppressWarnings("FieldCanBeLocal")
@@ -77,9 +76,9 @@ public class StepDetectorService extends Service implements SensorEventListener 
                 FileInputStream fis = getApplicationContext().openFileInput(lastDataFilename);
                 DataInputStream dis = new DataInputStream(fis);
 
-                int day = dis.readInt();
-                int month = dis.readInt();
                 int year = dis.readInt();
+                int month = dis.readInt();
+                int day = dis.readInt();
                 currentSteps = dis.readInt();
                 currentTime = dis.readLong();
                 dis.close();
@@ -101,21 +100,19 @@ public class StepDetectorService extends Service implements SensorEventListener 
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-
                     currentSteps = 0;
-                    currentTime = 0l;
+                    currentTime = 0L;
                 }
 
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         else {
             currentSteps = 0;
-            currentTime = 0l;
+            currentTime = 0L;
         }
+        lastStartTime = System.currentTimeMillis();
         // If we get killed, after returning from here, restart
         return START_STICKY;
     }
@@ -132,7 +129,7 @@ public class StepDetectorService extends Service implements SensorEventListener 
             dos.writeInt(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
 
             dos.writeInt(currentSteps);
-            dos.writeLong(currentTime);
+            dos.writeLong(currentTime-lastStartTime+System.currentTimeMillis());
 
             dos.close();
         } catch (IOException e) {
@@ -171,7 +168,7 @@ public class StepDetectorService extends Service implements SensorEventListener 
         return currentSteps;
     }
     public Long getCurrentTime() {
-        return currentTime;
+        return (currentTime-lastStartTime+System.currentTimeMillis())/1000;
     }
     public void stopStepService()
     {

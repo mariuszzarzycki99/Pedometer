@@ -93,15 +93,19 @@ public class HomeFragment extends Fragment {
         return ((MainActivity) getActivity()).getSteps();
     }
 
-    public Long getTime() {
-        return ((MainActivity) getActivity()).getTime();
+    public String getTime() {
+        Long time = ((MainActivity) getActivity()).getTime();
+        long s = time % 60;
+        long m = (time / 60) % 60;
+        long h = (time / (60 * 60)) % 24;
+        return String.format("%02d:%02d:%02d", h,m,s);
     }
 
     private void updateFragmentInfo() {
         this.steps = getSteps();
         stepsTextView.setText(steps.toString());
         kmTextView.setText(calculateKilometers().toString());
-        timeTextView.setText(getTime().toString()); // TODO
+        timeTextView.setText(getTime());
         kcalTextView.setText(calculateCalories().toString());
     }
 
