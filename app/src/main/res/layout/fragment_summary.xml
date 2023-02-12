@@ -10,8 +10,8 @@
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart"
-        android:layout_width="match_parent"
-        android:layout_height="580dp"
+        android:layout_width="378dp"
+        android:layout_height="632dp"
         android:background="@drawable/rectangle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,35 +19,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.046" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next"
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/rectangle"
+        android:text="TMP"
+        android:textAlignment="center"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barChart" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Prev"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/barChart" />
-
-    <TextView
-        android:id="@+id/weekDate"
-        android:layout_width="148dp"
-        android:layout_height="41dp"
-        android:text="00.00 - 00.00"
-        android:textAlignment="center"
-        android:textColor="#ABC8C5"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintStart_toEndOf="@+id/button3"
         app:layout_constraintTop_toBottomOf="@+id/barChart" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
