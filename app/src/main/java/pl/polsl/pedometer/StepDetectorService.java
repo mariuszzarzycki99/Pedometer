@@ -39,6 +39,7 @@ public class StepDetectorService extends Service implements SensorEventListener 
     private Sensor sensor;
     private final IBinder binder = new PedoBinder();
     final static String lastDataFilename = "lastRecordedData";
+    final static String allDataFilename = "allData";
 
     public class PedoBinder extends Binder {
         StepDetectorService getStepService() {
@@ -79,17 +80,32 @@ public class StepDetectorService extends Service implements SensorEventListener 
                 int day = dis.readInt();
                 int month = dis.readInt();
                 int year = dis.readInt();
+                currentSteps = dis.readInt();
+                currentTime = dis.readLong();
+                dis.close();
 
                 if((year != Calendar.getInstance().get(Calendar.YEAR)) ||
                         ((Calendar.getInstance().get(Calendar.MONTH)+1)!= month) ||
                         ((Calendar.getInstance().get(Calendar.DAY_OF_MONTH) != day)))
                 {
-                    //TODO: save time and steps
+                    File path = getApplicationContext().getFilesDir();
+                    try {
+                        FileOutputStream writer = new FileOutputStream(new File(path, allDataFilename),true);
+                        DataOutputStream dos = new DataOutputStream(writer);
+                        dos.writeInt(year);
+                        dos.writeInt(month);
+                        dos.writeInt(day);
+                        dos.writeInt(currentSteps);
+                        dos.close();
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
                     currentSteps = 0;
                     currentTime = 0l;
                 }
-                currentSteps = dis.readInt();
-                currentTime = dis.readLong();
+
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
@@ -100,7 +116,6 @@ public class StepDetectorService extends Service implements SensorEventListener 
             currentSteps = 0;
             currentTime = 0l;
         }
-        Toast.makeText(this, "Service starting", Toast.LENGTH_SHORT).show();
         // If we get killed, after returning from here, restart
         return START_STICKY;
     }
@@ -126,7 +141,6 @@ public class StepDetectorService extends Service implements SensorEventListener 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Toast.makeText(this, "Service done", Toast.LENGTH_SHORT).show();
         SingletonServiceManager.isStepDetectorServiceRunning = false;
     }
 
@@ -138,7 +152,6 @@ public class StepDetectorService extends Service implements SensorEventListener 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         currentSteps++;
-        Toast.makeText(this, "Steps: " + currentSteps, Toast.LENGTH_SHORT).show();
     }
 
     @Override
