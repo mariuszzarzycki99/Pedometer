@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         createRandomHistory();
         List<DateSteps> data = loadHistory();
         for(DateSteps ds : data)
-            System.out.println(ds.date.toString() + " " + ds.steps);
+            System.out.println(ds.getDate().toString() + " " + ds.getSteps());
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
@@ -226,16 +226,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             loadSettings();
         } else {
             Settings.loadDefault();
-        }
-    }
-
-    public class DateSteps{
-        LocalDate date;
-        Integer steps;
-        public DateSteps(int year, int month, int day, Integer _steps)
-        {
-            date = LocalDate.of(year,month-1,day);
-            steps = _steps;
         }
     }
 
