@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -36,15 +35,15 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        Button button = (Button) view.findViewById(R.id.settingsButton);
+        Button button = view.findViewById(R.id.settingsButton);
 
-        Spinner genderField = (Spinner) view.findViewById(R.id.gender);
+        Spinner genderField = view.findViewById(R.id.gender);
         setSpinnerValue(genderField);
 
-        EditText heightField = (EditText) view.findViewById(R.id.height);
+        EditText heightField = view.findViewById(R.id.height);
         heightField.setText(Settings.getHeight().toString());
 
-        EditText weightField = (EditText) view.findViewById(R.id.weight);
+        EditText weightField = view.findViewById(R.id.weight);
         weightField.setText(Settings.getWeight().toString());
 
         button.setOnClickListener(new View.OnClickListener() {

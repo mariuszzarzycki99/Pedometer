@@ -2,7 +2,6 @@ package pl.polsl.pedometer;
 
 import android.Manifest.permission;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
@@ -23,14 +22,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 
@@ -41,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     private static final int ACTIVITY_CODE = 77;
     private Integer lastSteps = 0;
     private Long lastTime = 0l;
+
+    boolean permissionsGranted = false;
     @SuppressWarnings("FieldCanBeLocal")
     private StepDetectorService stepService;
     boolean mStepServiceBound = false;
@@ -88,7 +85,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         if (ContextCompat.checkSelfPermission(this, permission.ACTIVITY_RECOGNITION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission.ACTIVITY_RECOGNITION}, ACTIVITY_CODE);
+            askForPermissions();
+        }
+        else {
+            permissionsGranted = true;
         }
         if(SingletonServiceManager.isStepDetectorServiceRunning) {
             Intent intent = new Intent(this, StepDetectorService.class);
@@ -101,7 +101,13 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         }
         initializeSettings();
     }
-
+    public void askForPermissions()
+    {
+        ActivityCompat.requestPermissions(this, new String[]{permission.ACTIVITY_RECOGNITION}, ACTIVITY_CODE);
+    }
+    public boolean isPermissionsGranted() {
+        return permissionsGranted;
+    }
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
@@ -129,9 +135,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == ACTIVITY_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(MainActivity.this, "Activity Permission Granted", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "You can use application now", Toast.LENGTH_LONG).show();
+                permissionsGranted = true;
             } else {
-                Toast.makeText(MainActivity.this, "Activity Permission Denied", Toast.LENGTH_LONG).show();
+                permissionsGranted = false;
             }
         }
     }
@@ -246,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             FileOutputStream fos = new FileOutputStream(fileToSave,true);
             DataOutputStream dos = new DataOutputStream(fos);
 
-            for(int i=0;i<10;i++) {
+            for(int i=0;i<11;i++) {
                 dos.writeInt(2023);
                 dos.writeInt(2);
                 dos.writeInt(i+1);

@@ -7,14 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
 
@@ -31,10 +30,6 @@ public class HomeFragment extends Fragment {
 
     public HomeFragment() {
         // Required empty public constructor
-    }
-
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
     }
 
     @Override
@@ -65,18 +60,24 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        ImageButton button = (ImageButton) view.findViewById(R.id.button2);
+        ImageButton button = view.findViewById(R.id.button2);
 
-        stepsTextView = (TextView) view.findViewById(R.id.steps);
-        kmTextView = (TextView) view.findViewById(R.id.kilometers);
-        timeTextView = (TextView) view.findViewById(R.id.time);
-        kcalTextView = (TextView) view.findViewById(R.id.kcal);
+        stepsTextView = view.findViewById(R.id.steps);
+        kmTextView = view.findViewById(R.id.kilometers);
+        timeTextView = view.findViewById(R.id.time);
+        kcalTextView = view.findViewById(R.id.kcal);
 
         button.setSelected(SingletonServiceManager.isStepDetectorServiceRunning);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!((MainActivity)getActivity()).isPermissionsGranted())
+                {
+                    Toast.makeText(getActivity(), "You can't use pedometer without permissions",Toast.LENGTH_LONG).show();
+                    ((MainActivity)getActivity()).askForPermissions();
+                    return;
+                }
                 button.setSelected(!button.isSelected());
                 if (button.isSelected()) {
                     ((MainActivity) getActivity()).startCounting();

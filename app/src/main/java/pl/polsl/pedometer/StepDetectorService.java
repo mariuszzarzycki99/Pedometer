@@ -6,15 +6,16 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -27,7 +28,7 @@ import java.io.IOException;
 import java.util.Calendar;
 
 
-public class StepDetectorService extends Service implements SensorEventListener {
+public class StepDetectorService extends Service implements SensorEventListener, DayChangedInterface {
 
     private static Integer currentSteps;
     private static Long currentTime;
@@ -39,6 +40,8 @@ public class StepDetectorService extends Service implements SensorEventListener 
     private final IBinder binder = new PedoBinder();
     final static String lastDataFilename = "lastRecordedData";
     final static String allDataFilename = "allData";
+    private DayChangedReceiver dayChangedReceiver;
+    IntentFilter intentFilter;
 
     public class PedoBinder extends Binder {
         StepDetectorService getStepService() {
@@ -51,6 +54,9 @@ public class StepDetectorService extends Service implements SensorEventListener 
 
     @Override
     public void onCreate() {
+        dayChangedReceiver = new DayChangedReceiver(this);
+        intentFilter = new IntentFilter(Intent.ACTION_DATE_CHANGED);
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
@@ -87,21 +93,7 @@ public class StepDetectorService extends Service implements SensorEventListener 
                         ((Calendar.getInstance().get(Calendar.MONTH)+1)!= month) ||
                         ((Calendar.getInstance().get(Calendar.DAY_OF_MONTH) != day)))
                 {
-                    File path = getApplicationContext().getFilesDir();
-                    try {
-                        FileOutputStream writer = new FileOutputStream(new File(path, allDataFilename),true);
-                        DataOutputStream dos = new DataOutputStream(writer);
-                        dos.writeInt(year);
-                        dos.writeInt(month);
-                        dos.writeInt(day);
-                        dos.writeInt(currentSteps);
-                        dos.close();
-
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    currentSteps = 0;
-                    currentTime = 0L;
+                    saveCurrentStateToFile();
                 }
 
             } catch (IOException e) {
@@ -113,12 +105,14 @@ public class StepDetectorService extends Service implements SensorEventListener 
             currentTime = 0L;
         }
         lastStartTime = System.currentTimeMillis();
+        registerReceiver(dayChangedReceiver,intentFilter, Context.RECEIVER_EXPORTED);
         // If we get killed, after returning from here, restart
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
+        unregisterReceiver(dayChangedReceiver);
         try
         {
             FileOutputStream fos = getApplicationContext().openFileOutput(lastDataFilename, Context.MODE_PRIVATE);
@@ -173,4 +167,42 @@ public class StepDetectorService extends Service implements SensorEventListener 
     {
         stopSelf();
     }
+
+    class DayChangedReceiver extends BroadcastReceiver {
+
+        DayChangedInterface dayChangedInterface;
+        public DayChangedReceiver(DayChangedInterface dayChangedInterface)
+        {
+            this.dayChangedInterface = dayChangedInterface;
+        }
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            dayChangedInterface.dayChanged();
+        }
+    }
+    @Override
+    public void dayChanged() {
+        saveCurrentStateToFile();
+    }
+
+    private void saveCurrentStateToFile()
+    {
+        File path = getApplicationContext().getFilesDir();
+        try {
+            FileOutputStream writer = new FileOutputStream(new File(path, allDataFilename),true);
+            DataOutputStream dos = new DataOutputStream(writer);
+            dos.writeInt(Calendar.getInstance().get(Calendar.YEAR));
+            dos.writeInt(Calendar.getInstance().get(Calendar.MONTH+1));
+            dos.writeInt(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+            dos.writeInt(currentSteps);
+            dos.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        currentSteps = 0;
+        lastStartTime = System.currentTimeMillis();
+        currentTime = 0L;
+    }
+
 }

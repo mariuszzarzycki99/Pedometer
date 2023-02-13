@@ -56,7 +56,7 @@ public class SummaryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_summary, container, false);
 
         barChart = view.findViewById(R.id.barChart);
-        infoTextView = (TextView) view.findViewById(R.id.info);
+        infoTextView = view.findViewById(R.id.info);
 
         BarDataSet barDataSet = createGraphData();
         barChart.setData(new BarData(barDataSet));
