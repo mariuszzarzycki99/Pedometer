@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
@@ -69,11 +70,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        deleteRandomHistory();
-//        createRandomHistory();
-//        List<DateSteps> data = loadHistory();
-//        for(DateSteps ds : data)
-//            System.out.println(ds.getDate().toString() + " " + ds.getSteps());
+        deleteRandomHistory();
+        createRandomHistory();
+        List<DateSteps> data = loadHistory();
+        for(DateSteps ds : data)
+            System.out.println(ds.getDate().toString() + " " + ds.getSteps());
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
@@ -253,12 +254,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             FileOutputStream fos = new FileOutputStream(fileToSave,true);
             DataOutputStream dos = new DataOutputStream(fos);
 
-            for(int i=0;i<11;i++) {
+            for(int i=0;i<13;i++) {
                 dos.writeInt(2023);
                 dos.writeInt(2);
                 dos.writeInt(i+1);
-
-                dos.writeInt(i*10+i%2);
+                Random random = new Random();
+                dos.writeInt(Math.abs(random.nextInt()%500));
             }
             dos.close();
         } catch (IOException e) {
