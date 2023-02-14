@@ -112,6 +112,7 @@ public class StepDetectorService extends Service implements SensorEventListener,
 
     @Override
     public void onDestroy() {
+        sensorManager.unregisterListener(this);
         unregisterReceiver(dayChangedReceiver);
         try
         {
